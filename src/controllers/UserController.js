@@ -12,7 +12,7 @@ class UserController{
         let{name,email,password,birth} = req.body
         let result = await User.createUser(name,email,password,birth)
         .catch(error=>{
-            console.log("falha na entrada do banco: ",error)
+            console.log("falha na entrada do banco")
             return res.status(400).json({error:"Falha ao cadastrar Usuario"})
         })
         if (result.status == 0){
@@ -57,6 +57,23 @@ class UserController{
         })
 
         return res.json({response:users})
+    }
+
+    async updateUser(req,res){
+
+        let {id} = req.body
+        let result = await User.update(id)
+        .catch(error=>{
+            console.log(error)
+            return res.status(400).json({error:"Falha na alteração do email"})
+        })
+        if (result != undefined){
+
+            return res.json({response:"Email altualizado com sucesso!"})
+        }else{
+            
+            return res.status(400).json({error:"Falha na alteração do email"})
+        }
     }
 }
 module.exports = new UserController();

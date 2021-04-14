@@ -50,5 +50,16 @@ class User {
         return result
     
     }
+
+    async update(id){
+        let result = await knex.update({email:email})
+        .where({id:id})
+        .table("users")
+        .catch(error=>{
+            console.log(error)
+            return undefined
+        })
+        return result
+    }
 }
 module.exports = new User();
