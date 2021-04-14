@@ -10,7 +10,7 @@ router.post("/login",UserController.login);
 router.get("/users",AdminAuth,UserController.list);
 router.put("/users",AdminAuth,UserController.updateUser);
 router.delete("/users",AdminAuth,UserController.deleteUser);
-router.post("/recover",AdminAuth,UserController.recoverPassword);
+router.post("/recover",UserController.recoverPassword);
 router.post("/changePass",UserController.alterPassword);
 
 module.exports = router;
