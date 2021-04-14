@@ -102,14 +102,17 @@ class UserController{
 
     async recoverPassword(req,res){
 
-        let email = req.body.email
+        let {email} = req.body
+        
         let result = await PasswordToken.create(email)
+        
         if(result.status){
 
             console.log(result.token)
             return res.json({response:result.token})
             
         }else{
+
             return res.status(406).json({error:result.err})
         }
     }

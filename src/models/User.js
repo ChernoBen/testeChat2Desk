@@ -1,3 +1,4 @@
+const PasswordToken = require("./PasswordToken");
 const knex = require("../database/connection");
 const bcrypt = require("bcrypt");
 
@@ -26,16 +27,11 @@ class User {
     }
 
     async findByEmail(email) {
-
-        let result = await knex.select(["id", "email", "password", "name"])
+        console.log("-------->",email)
+        let result = await knex.select()
             .from("users")
             .where({ email: email })
-            .catch(error => {
-
-                console.log("Falha em obter dados a partir do email")
-                return undefined
-            })
-
+            
         if (result.length > 0) {
 
             console.log(result)
@@ -94,6 +90,7 @@ class User {
         await knex.update({password:hash})
         .where({id:id})
         .table("users")
+        await PasswordToken.setUsed(token)
     }
 }
 module.exports = new User();

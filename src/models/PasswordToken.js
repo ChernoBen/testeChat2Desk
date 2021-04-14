@@ -1,13 +1,16 @@
 const knex = require("../database/connection");
 const bcrypt = require("bcrypt");
 const User = require("./User");
-const { result } = require("lodash");
+
 
 class PasswordToken{
 
     async create(email){
-        let user = await User.findByEmail(email)
-        console.log(user)
+        
+        let user = await knex.select(["id","name","email"])
+        .from("users")
+        .where({email:email})   
+        
         if(user != undefined){
 
             let token = Date.now()
@@ -15,10 +18,7 @@ class PasswordToken{
                 user_id:user.id,
                 used:0,
                 token:token
-            }).table("passwordToken").catch(error=>{
-                console.log(error)
-                return {status:false,err:"email não existe!"}
-            })
+            }).table("passwordToken")
 
             return {status:true,token:token}
 
@@ -56,7 +56,11 @@ class PasswordToken{
 
     }
 
-    
+    async setUsed(token){
+        await knex.update({used:1})
+        .where({token:token})
+        .table("passwordToken")
+    }
 }
 
 module.exports = new PasswordToken();
