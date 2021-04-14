@@ -2,6 +2,7 @@
 const User = require("../models/User");
 const PasswordToken = require("../models/PasswordToken");
 const jwt = require("jsonwebtoken");
+const validator = require('cpf-cnpj-validator')
 const bcrypt = require("bcrypt");
 require('dotenv/config');
 const secret = process.env.SECRET_API;
@@ -10,7 +11,25 @@ class UserController{
 
     async Create(req,res){
         
-        let{name,email,password,birth} = req.body
+        let{name,email,password,birth,documento} = req.body
+
+        if (!email || !documento || !password || !name) {
+            return res.status(400).json({ message: "Informe dados para cadastro" })
+        }
+
+        if (!name) return res.status(400).json({ message: "Informe o Nome para cadastrar usuario" });
+        if (email && !email.validate(email)) return res.status(400).json({ message: "Informe um e-mail válido!" })
+        if (birth) birth = birth.split('/').reverse().join('-');
+        if(password.length < 6) return res.status(400).json({message:"* Senha possui menos que seis caracteres!"})
+        
+        if ((!documento.length == 11 || !validator.cpf.isValid(documento)) && (!documento.length == 14 || !validator.cnpj.isValid(documento))) {
+            if (documento.length == 11) {
+                return res.status(400).json({ message: "CPF inválido" })
+            } else {
+                return res.status(400).json({ message: "CNPJ inválido" })
+            }
+        }
+
         let result = await User.createUser(name,email,password,birth)
         .catch(error=>{
 
@@ -70,8 +89,16 @@ class UserController{
 
     async updateUser(req,res){
 
-        let {id} = req.body
-        let result = await User.update(id)
+        let {id,name,email} = req.body
+
+        if (!email || !name) {
+            return res.status(400).json({ message: "Informe todos os dados para editar Usuário" })
+        }
+
+        if (!name) return res.status(400).json({ message: "Informe o Nome para editar usuario" });
+        if (email && !email.validate(email)) return res.status(400).json({ message: "Informe um e-mail válido!" })
+
+        let result = await User.update(id,name,email)
         .catch(error=>{
 
             console.log(error)
@@ -103,9 +130,10 @@ class UserController{
     async recoverPassword(req,res){
 
         let {email} = req.body
+        if (email && !email.validate(email)) return res.status(400).json({ error: "Informe um e-mail válido!" })
         
         let result = await PasswordToken.create(email)
-        
+
         if(result.status){
 
             console.log(result.token)
@@ -120,6 +148,7 @@ class UserController{
     async alterPassword(req,res){
 
         let {token,password} = req.body
+        if(password.length < 6) return res.status(400).json({message:"* Senha possui menos que seis caracteres!"})
         let isValid = await PasswordToken.validate(token)
         
         if(isValid.status){

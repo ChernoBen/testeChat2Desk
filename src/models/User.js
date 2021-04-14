@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt");
 
 class User {
 
-    async createUser(name, email, password, birth) {
+    async createUser(name, email, password, birth,documento) {
         
         let hash = await bcrypt.hash(password, 10)
             .catch(error => {
@@ -14,7 +14,7 @@ class User {
 
         console.log("-------->", hash)
 
-        let result = await knex.insert({ name: name, email: email, password: hash, birth: birth })
+        let result = await knex.insert({ name: name, email: email, password: hash, birth: birth,documento:documento })
             .table("users")
             .catch(error => {
 
@@ -56,9 +56,9 @@ class User {
 
     }
 
-    async update(id) {
+    async update(id,name,email) {
 
-        let result = await knex.update({ email: email })
+        let result = await knex.update({ name:name,email: email })
             .where({ id: id })
             .table("users")
             .catch(error => {
