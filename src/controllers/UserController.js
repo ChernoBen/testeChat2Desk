@@ -1,15 +1,14 @@
+
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require('dotenv/config');
-//const secret = process.env.SECRET_API
-const secret = "201911722001";
-
+const secret = process.env.SECRET_API;
 
 class UserController{
 
     async Create(req,res){
-        console.log("#################################")
+        
         let{name,email,password,birth} = req.body
         let result = await User.createUser(name,email,password,birth)
         .catch(error=>{
@@ -25,7 +24,7 @@ class UserController{
     }
 
     async login(req,res){
-
+       
         let {email,password} = req.body
         let user = await User.findByEmail(email)
         .catch(error=>{
