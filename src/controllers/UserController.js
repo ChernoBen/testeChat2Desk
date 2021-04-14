@@ -1,5 +1,6 @@
 
 const User = require("../models/User");
+const PasswordToken = require("../models/PasswordToken");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 require('dotenv/config');
@@ -98,5 +99,33 @@ class UserController{
 
         return res.json({message:"Usuario deletado com sucesso!",response:result})
     }
+
+    async recoverPassword(req,res){
+
+        let email = req.body.email
+        let result = await PasswordToken.create(email)
+        if(result.status){
+
+            console.log(result.token)
+            return res.json({response:result.token})
+            
+        }else{
+            return res.status(406).json({error:result.err})
+        }
+    }
+
+    async alterPassword(req,res){
+
+        let {token,password} = req.body
+        let isValid = await PasswordToken.validate(token)
+        
+        if(isValid.status){
+            await User.changePass(password,isValid.token.user_id,isValid.token.token)
+            return res.json({message:"senha alterada com sucesso"})
+        }else{
+            return res.status(406).json({message:"Token invalido"})
+        }
+    }
+
 }
 module.exports = new UserController();
