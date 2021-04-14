@@ -47,5 +47,16 @@ class UserController{
             return res.status(400).json({error:"Usuario não encontrado"})
         }
     }
+
+    async list(req,res){
+
+        let users = await User.findAll()
+        .catch(error=>{
+            console.log(error)
+            return res.status(400).json({error:"Falha na listagem de usuários"})
+        })
+
+        return res.json({response:users})
+    }
 }
 module.exports = new UserController();

@@ -38,5 +38,17 @@ class User {
             return undefined
         }
     }
+
+    async findAll(){
+        
+        let result = await knex.select(["id","name","email"])
+        .from("users")
+        .catch(error=>{
+            console.log(erro)
+        })
+
+        return result
+    
+    }
 }
 module.exports = new User();
