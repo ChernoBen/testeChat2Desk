@@ -27,7 +27,7 @@ class User {
     }
 
     async findByEmail(email) {
-        console.log("-------->",email)
+        
         let result = await knex.select()
             .from("users")
             .where({ email: email })
