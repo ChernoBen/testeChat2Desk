@@ -1,0 +1,27 @@
+{
+  "name": "chat2desk",
+  "version": "1.0.0",
+  "description": "Projeto back end cadastro de usuario",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChernoBen/testeChat2Desk.git"
+  },
+  "author": "Benjamim Francisco",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ChernoBen/testeChat2Desk/issues"
+  },
+  "homepage": "https://github.com/ChernoBen/testeChat2Desk#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "knex": "^0.95.4",
+    "mysql2": "^2.2.5"
+  }
+}
