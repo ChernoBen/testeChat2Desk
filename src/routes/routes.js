@@ -12,5 +12,6 @@ router.put("/users",AdminAuth,UserController.updateUser);
 router.delete("/users",AdminAuth,UserController.deleteUser);
 router.post("/recover",UserController.recoverPassword);
 router.post("/changePass",UserController.alterPassword);
+router.post("/validate",AdminAuth,UserController.validate)
 
 module.exports = router;

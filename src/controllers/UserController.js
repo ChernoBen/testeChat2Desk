@@ -10,6 +10,11 @@ const secret = process.env.SECRET_API;
 
 class UserController{
 
+
+    async validate(req,res){
+        return res.json{status:true}
+    }
+
     async Create(req,res){
         
         let{name,email,password,birth,documento} = req.body
