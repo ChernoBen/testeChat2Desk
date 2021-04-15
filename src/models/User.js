@@ -13,16 +13,17 @@ class User {
             });
 
         console.log("-------->", hash)
+        try{
 
-        let result = await knex.insert({ name: name, email: email, password: hash, birth: birth,documento:documento })
-            .table("users")
-            .catch(error => {
+            await knex.insert({ name: name, email: email, password: hash, birth: birth,documento:documento }).table("users")
+            return true
 
-                console.log("falha ao criar novo usuario")
-                return { status: 0 }
-            })
-        console.log(`SAIDA DO BANCO: ${result}`, result)
-        return { status: 1 }
+        }catch(error){
+            return false
+        }
+        
+        //console.log(`SAIDA DO BANCO: ${result}`, result)
+        //return { status: 1 }
 
     }
 

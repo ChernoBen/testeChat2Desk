@@ -13,11 +13,12 @@ class UserController{
     async Create(req,res){
         
         let{name,email,password,birth,documento} = req.body
+        console.log(name,email,password,birth,documento)
 
         if (!email || !documento || !password || !name) {
             return res.status(400).json({ message: "Informe dados para cadastro" })
         }
-
+        
         if (!name) return res.status(400).json({ message: "Informe o Nome para cadastrar usuario" });
         if (email && !Email.validate(email)) return res.status(400).json({ message: "Informe um e-mail válido!" })
         if (birth) birth = birth.split('/').reverse().join('-');
@@ -31,18 +32,17 @@ class UserController{
             }
         }
 
-        let result = await User.createUser(name,email,password,birth)
+        let result = await User.createUser(name,email,password,birth,documento)
         .catch(error=>{
-
-            console.log("falha na entrada do banco")
-            return res.status(400).json({error:"Falha ao cadastrar Usuario"})
-
+            return res.status(400).json({message:"Verifique os dados no formulário",status:0})
         })
-        if (result.status == 0){
-
-            return res.status(400).json({response:"Falha no cadastro",status:0})
+        if(result==true){
+            return res.json({message:"Usuario cadastrado com sucesso",status:1})
+        }else{
+            return res.status(400).json({message:"Verifique os dados no formulário",status:0})
         }
-        return res.json({response:"Usuario cadastrado com sucesso",status:1})
+        
+       
         
     }
 
@@ -67,12 +67,12 @@ class UserController{
 
             }else{
 
-                return res.status(406).json({error:"Senha incorreta"})
+                return res.status(406).json({message:"Senha incorreta"})
             }
 
         }else{
 
-            return res.status(400).json({error:"Usuario não encontrado"})
+            return res.status(400).json({message:"Usuario não encontrado"})
         }
     }
 
