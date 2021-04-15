@@ -10,12 +10,12 @@ class PasswordToken{
         let user = await knex.select(["id","name","email"])
         .from("users")
         .where({email:email})   
-        
+        console.log("passwordToken--#1---->",user[0].id)
         if(user != undefined){
 
             let token = Date.now()
             await knex.insert({
-                user_id:user.id,
+                user_id:user[0].id,
                 used:0,
                 token:token
             }).table("passwordToken")
@@ -30,9 +30,7 @@ class PasswordToken{
 
     async validate(token){
 
-        let result = await knex.select()
-        .where({token:token})
-        .table("passwordToken").catch(error=>{
+        let result = await knex.select().where({token:token}).table("passwordToken").catch(error=>{
             console.log(error)
             return false
         })
@@ -45,7 +43,7 @@ class PasswordToken{
                 return false
 
             }else{
-
+                console.log("2# ------->",tk)
                 return {status:true,token:tk}
             }
 
@@ -57,9 +55,7 @@ class PasswordToken{
     }
 
     async setUsed(token){
-        await knex.update({used:1})
-        .where({token:token})
-        .table("passwordToken")
+        await knex.update({used:1}).where({token:token}).table("passwordToken")
     }
 }
 

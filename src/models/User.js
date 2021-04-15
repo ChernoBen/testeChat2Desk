@@ -86,11 +86,10 @@ class User {
     }
 
     async changePass(pass,id,token){
-
+        console.log("3#---->",pass)
         let hash = await bcrypt.hash(pass,10)
-        await knex.update({password:hash})
-        .where({id:id})
-        .table("users")
+        console.log("4#------>",hash)
+        await knex.update({password:hash}).where({id:id}).table("users")
         await PasswordToken.setUsed(token)
     }
 }

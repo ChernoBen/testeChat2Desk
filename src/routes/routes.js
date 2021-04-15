@@ -14,4 +14,5 @@ router.post("/recover",UserController.recoverPassword);
 router.post("/changePass",UserController.alterPassword);
 router.post("/validate",AdminAuth,UserController.validate)
 
+
 module.exports = router;

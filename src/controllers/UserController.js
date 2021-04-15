@@ -181,13 +181,17 @@ class UserController{
 
     async alterPassword(req,res){
 
-        let {token,password} = req.body
+        let token = req.body.token
+        let password = req.body.password
+        console.log("A SENHA ----->",password)
+
         if(password.length < 6) return res.status(400).json({message:"* Senha possui menos que seis caracteres!"})
         let isValid = await PasswordToken.validate(token)
         
         if(isValid.status){
             await User.changePass(password,isValid.token.user_id,isValid.token.token)
             return res.json({message:"senha alterada com sucesso"})
+
         }else{
             return res.status(406).json({message:"Token invalido"})
         }
