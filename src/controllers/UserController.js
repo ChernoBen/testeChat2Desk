@@ -2,8 +2,9 @@
 const User = require("../models/User");
 const PasswordToken = require("../models/PasswordToken");
 const jwt = require("jsonwebtoken");
-const validator = require('cpf-cnpj-validator')
-const Email = require('email-validator')
+const validator = require('cpf-cnpj-validator');
+const Email = require('email-validator');
+const nodemailer = require('nodemailer');
 const bcrypt = require("bcrypt");
 require('dotenv/config');
 const secret = process.env.SECRET_API;
@@ -12,7 +13,8 @@ class UserController{
 
 
     async validate(req,res){
-        return res.json{status:true}
+        
+        return res.json({status:true})
     }
 
     async Create(req,res){
@@ -20,10 +22,7 @@ class UserController{
         let{name,email,password,birth,documento} = req.body
         console.log(name,email,password,birth,documento)
 
-        if (!email || !documento || !password || !name) {
-            return res.status(400).json({ message: "Informe dados para cadastro" })
-        }
-        
+        if (!email || !documento || !password || !name) return res.status(400).json({ message: "Informe dados para cadastro" })
         if (!name) return res.status(400).json({ message: "Informe o Nome para cadastrar usuario" });
         if (email && !Email.validate(email)) return res.status(400).json({ message: "Informe um e-mail válido!" })
         if (birth) birth = birth.split('/').reverse().join('-');
@@ -143,6 +142,35 @@ class UserController{
         if(result.status){
 
             console.log(result.token)
+
+            let config = {
+                host:"smtp.umbler.com",
+                port:587,
+                user:"benjamim@benfrancis.dev.br",
+                pass:"Cadeira@10"
+            }
+            const transporter = nodemailer.createTransport({
+                host:config.host,
+                port:config.port,
+                auth:{
+                    user:config.user,
+                    pass:config.pass
+                },
+    
+            })
+          
+            await transporter.sendMail({
+                text:`Token de recuperação de senha: ${result.token}`,
+                subject:"Token de recuperação de senha",
+                from:"benjamim@benfrancis.dev.br <benjamim@benfrancis.dev.br>",
+                to:email
+            }).then(response=>{
+                console.log(response)
+            }).catch(error=>{
+                console.log(error)
+            })
+              
+            
             return res.json({response:result.token})
             
         }else{
