@@ -7,11 +7,9 @@ class PasswordToken{
 
     async create(email){
         
-        let user = await knex.select(["id","name","email"])
-        .from("users")
-        .where({email:email})   
-        console.log("passwordToken--#1---->",user[0].id)
-        if(user != undefined){
+        let user = await knex.select(["id","name","email"]).from("users").where({email:email})   
+
+        if(user[0]!= undefined){
 
             let token = Date.now()
             await knex.insert({
@@ -31,7 +29,6 @@ class PasswordToken{
     async validate(token){
 
         let result = await knex.select().where({token:token}).table("passwordToken").catch(error=>{
-            console.log(error)
             return false
         })
 
@@ -43,7 +40,6 @@ class PasswordToken{
                 return false
 
             }else{
-                console.log("2# ------->",tk)
                 return {status:true,token:tk}
             }
 

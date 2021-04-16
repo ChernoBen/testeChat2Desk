@@ -26,7 +26,7 @@ class UserController{
         if (!name) return res.status(400).json({ message: "Informe o Nome para cadastrar usuario" });
         if (email && !Email.validate(email)) return res.status(400).json({ message: "Informe um e-mail válido!" })
         if (birth) birth = birth.split('/').reverse().join('-');
-        if(password.length < 6) return res.status(400).json({message:"* Senha possui menos que seis caracteres!"})
+        if(password.length < 6) return res.status(400).json({message:" Senha possui menos que seis caracteres!"})
         
         if ((!documento.length == 11 || !validator.cpf.isValid(documento)) && (!documento.length == 14 || !validator.cnpj.isValid(documento))) {
             if (documento.length == 11) {
@@ -38,25 +38,21 @@ class UserController{
 
         let result = await User.createUser(name,email,password,birth,documento)
         .catch(error=>{
-            return res.status(400).json({message:"Verifique os dados no formulário",status:0})
+            return res.status(400).json({message:"Verifique os dados no formulário"})
         })
+
         if(result==true){
-            return res.json({message:"Usuario cadastrado com sucesso",status:1})
+            return res.json({message:"Usuario cadastrado com sucesso"})
         }else{
-            return res.status(400).json({message:"Verifique os dados no formulário",status:0})
+            return res.status(400).json({message:"Verifique os dados no formulário"})
         }
-        
-       
         
     }
 
     async login(req,res){
        
         let {email,password} = req.body
-        let user = await User.findByEmail(email)
-        .catch(error=>{
-
-            console.log("falha ao obter email")
+        let user = await User.findByEmail(email).catch(error=>{
             return res.status(400).json({message:"Email não encontrado"})
         })
 
@@ -80,57 +76,7 @@ class UserController{
         }
     }
 
-    async list(req,res){
-
-        let users = await User.findAll()
-        .catch(error=>{
-
-            console.log(error)
-            return res.status(400).json({error:"Falha na listagem de usuários"})
-        })
-
-        return res.json({response:users})
-    }
-
-    async updateUser(req,res){
-
-        let {id,name,email} = req.body
-
-        if (!email || !name) {
-            return res.status(400).json({ message: "Informe todos os dados para editar Usuário" })
-        }
-
-        if (!name) return res.status(400).json({ message: "Informe o Nome para editar usuario" });
-        if (email && !Email.validate(email)) return res.status(400).json({ message: "Informe um e-mail válido!" })
-
-        let result = await User.update(id,name,email)
-        .catch(error=>{
-
-            console.log(error)
-            return res.status(400).json({error:"Falha na alteração do email"})
-        })
-
-        if (result != undefined){
-
-            return res.json({response:"Email altualizado com sucesso!"})
-
-        }else{
-            
-            return res.status(400).json({error:"Falha na alteração do email"})
-        }
-    }
-
-    async deleteUser(req,res){
-
-        let {id} = req.body
-        let result = await User.delete(id)
-        .catch(error=>{
-            console.log(error)
-            return res.status(400).json({error:error})
-        })
-
-        return res.json({message:"Usuario deletado com sucesso!",response:result})
-    }
+   
 
     async recoverPassword(req,res){
 

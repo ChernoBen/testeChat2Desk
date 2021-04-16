@@ -8,11 +8,9 @@ class User {
         
         let hash = await bcrypt.hash(password, 10)
             .catch(error => {
-
-                console.log("Falha em gerar hash")
+                return false
             });
 
-        console.log("-------->", hash)
         try{
 
             await knex.insert({ name: name, email: email, password: hash, birth: birth,documento:documento }).table("users")
@@ -21,17 +19,12 @@ class User {
         }catch(error){
             return false
         }
-        
-        //console.log(`SAIDA DO BANCO: ${result}`, result)
-        //return { status: 1 }
 
     }
 
     async findByEmail(email) {
         
-        let result = await knex.select()
-            .from("users")
-            .where({ email: email })
+        let result = await knex.select().from("users").where({ email: email })
             
         if (result.length > 0) {
 
@@ -46,9 +39,7 @@ class User {
 
     async findAll() {
 
-        let result = await knex.select(["id", "name", "email"])
-            .from("users")
-            .catch(error => {
+        let result = await knex.select(["id", "name", "email"]).from("users").catch(error => {
 
                 console.log(erro)
             })
@@ -73,11 +64,7 @@ class User {
 
     async delete(id){
 
-        let result = await knex.delete()
-        .from("users")
-        .where({id:id})
-        .catch(error=>{
-
+        let result = await knex.delete().from("users").where({id:id}).catch(error=>{
             console.log(error)
             return undefined
         })
@@ -86,9 +73,7 @@ class User {
     }
 
     async changePass(pass,id,token){
-        console.log("3#---->",pass)
         let hash = await bcrypt.hash(pass,10)
-        console.log("4#------>",hash)
         await knex.update({password:hash}).where({id:id}).table("users")
         await PasswordToken.setUsed(token)
     }
