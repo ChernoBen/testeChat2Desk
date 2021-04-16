@@ -30,9 +30,9 @@ class UserController{
         
         if ((!documento.length == 11 || !validator.cpf.isValid(documento)) && (!documento.length == 14 || !validator.cnpj.isValid(documento))) {
             if (documento.length == 11) {
-                return res.status(400).json({ message: "CPF inválido" })
+                return res.status(400).json({ message: "DOCUMENTO inválido" })
             } else {
-                return res.status(400).json({ message: "CNPJ inválido" })
+                return res.status(400).json({ message: "DOCUMENTO inválido" })
             }
         }
 
