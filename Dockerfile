@@ -4,7 +4,7 @@ FROM node:alpine
 #Copiando arquivos do diretorio atual para o diretorio do container
 COPY ./ ./
 # instalar as dependencias
-RUN npm install -g npm@latest
+RUN npm install
 
 #Default command
 CMD ["npm","start"]
